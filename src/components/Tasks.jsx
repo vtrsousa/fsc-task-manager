@@ -17,24 +17,17 @@ const Tasks = () => {
   const eveningTasks = tasks.filter((task) => task.time === 'evening')
 
   const handleTaskCheckboxClick = (taskId) => {
-    const newTasks = tasks.map((t) => {
-      if (t.id !== taskId) {
-        return t
-      }
+    const newStatusTask = {
+      not_started: 'in_progress',
+      in_progress: 'done',
+      done: 'not_started',
+    }
 
-      if (t.status === 'not_started') {
-        return { ...t, status: 'in_progress' }
-      }
-      if (t.status === 'done') {
-        return { ...t, status: 'not_started' }
-      }
-      if (t.status === 'in_progress') {
-        return { ...t, status: 'done' }
-      }
-
-      return t
-    })
-
+    const newTasks = tasks.map((t) =>
+      t.id === taskId
+        ? { ...t, status: newStatusTask[t.status] || t.status }
+        : t
+    )
     setTasks(newTasks)
   }
 
