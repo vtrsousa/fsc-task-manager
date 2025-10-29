@@ -8,6 +8,7 @@ import TasksSeparator from './TasksSeparator'
 import TASKS from '../constants/tasks'
 import { useState } from 'react'
 import TaskItem from './TaskItem'
+import { toast } from 'sonner'
 
 const Tasks = () => {
   const [tasks, setTasks] = useState(TASKS)
@@ -28,7 +29,9 @@ const Tasks = () => {
         ? { ...t, status: newStatusTask[t.status] || t.status }
         : t
     )
+
     setTasks(newTasks)
+    toast.success('Tarefa atualizada com sucesso!')
   }
 
   const handleTaskDelete = (taskId) => {
@@ -37,6 +40,7 @@ const Tasks = () => {
     })
 
     setTasks(newTasks)
+    toast.success('Tarefa deletada com sucesso!')
   }
 
   return (
