@@ -1,5 +1,6 @@
-import SidebarButton from './SidebarButton'
 import { HomeIcon, TaksIcon } from '../assets/icons'
+import SidebarButton from './SidebarButton'
+
 const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-white">
