@@ -1,11 +1,23 @@
-const Button = ({ children, variant = 'primary', ...rest }) => {
+const Button = ({
+  children,
+  variant = 'primary',
+  size = 'small',
+  className,
+  ...rest
+}) => {
   const getVariantClasses = () => {
     if (variant == 'primary') return 'bg-[#00ADB5] text-white'
+    if (variant == 'secondary') return 'bg-[#EEEEEE] text-[#35383E]'
     if (variant == 'ghost') return 'bg-transparent text-[#818181]'
+  }
+
+  const getSizeClasses = () => {
+    if (size == 'small') return 'py-1 text-xs'
+    if (size == 'large') return 'py-2 text-sm'
   }
   return (
     <button
-      className={`flex gap-2 rounded-md px-3 py-1 text-xs font-semibold ${getVariantClasses()} transition-opacity hover:opacity-70`}
+      className={`flex items-center justify-center gap-2 rounded-md px-3 font-semibold ${getVariantClasses()} ${getSizeClasses()} ${className} transition-opacity hover:opacity-70`}
       {...rest}
     >
       {children}
