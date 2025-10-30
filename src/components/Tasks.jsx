@@ -69,7 +69,10 @@ const Tasks = () => {
         </div>
       </div>
 
-      <AddTaskDialog isOpen={addTasksDialogIsOpen} />
+      <AddTaskDialog
+        isOpen={addTasksDialogIsOpen}
+        handleCloseDialog={() => setAddTasksDialogIsOpen(false)}
+      />
 
       <div className="gap-6 space-y-6 rounded-xl bg-white p-6">
         <div className="space-y-3">
