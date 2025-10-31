@@ -129,6 +129,6 @@
   }
 
   body {
-    @apply bg-brand-white
+    @apply bg-brand-background
   }
 }
