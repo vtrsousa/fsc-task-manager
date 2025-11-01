@@ -1,7 +1,7 @@
 import '../styles/AddTaskDialog.css'
 
 import PropTypes from 'prop-types'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CSSTransition } from 'react-transition-group'
 import { v4 } from 'uuid'
@@ -11,30 +11,60 @@ import Input from './Inputs'
 import TimeSelect from './TimeSelect'
 
 const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmit }) => {
-  const [titleTask, setTitleTask] = useState('')
-  const [timeTask, setTimeTask] = useState('morning')
-  const [descriptionTask, setDescriptionTask] = useState('')
+  const [time, setTime] = useState('')
+  const [errors, setErrors] = useState([])
 
   const nodeRef = useRef()
-
-  useEffect(() => {
-    if (!isOpen) {
-      setTimeTask('')
-      setTimeTask('')
-      setDescriptionTask('')
-    }
-  }, [isOpen])
+  const titleRef = useRef()
+  const descriptionRef = useRef()
 
   const handleSaveClick = () => {
+    const newErrors = []
+
+    const title = titleRef.current.value
+    const description = descriptionRef.current.value
+
+    if (!title.trim()) {
+      newErrors.push({
+        inputName: 'title',
+        message: 'O título é obrigatório.',
+      })
+      return
+    }
+
+    if (!time.trim()) {
+      newErrors.push({
+        inputName: 'time',
+        message: 'O horário é obrigatório.',
+      })
+      return
+    }
+
+    if (!description.trim()) {
+      newErrors.push({
+        inputName: 'description',
+        message: 'A descrição é obrigatória.',
+      })
+      return
+    }
+
+    setErrors(newErrors)
+
     handleSubmit({
       id: v4(),
-      title: titleTask,
-      description: descriptionTask,
-      time: timeTask,
+      title,
+      description,
+      time,
       status: 'not_started',
     })
     handleCloseDialog()
   }
+
+  const titleError = errors.find((error) => error.inputName === 'title')
+  const timeError = errors.find((error) => error.inputName === 'time')
+  const descriptionError = errors.find(
+    (error) => error.inputName === 'description'
+  )
 
   return (
     <CSSTransition
@@ -62,19 +92,20 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmit }) => {
                   id="title"
                   placeholder="Insira o título da tarefa"
                   label="Título"
-                  value={titleTask}
-                  onChange={(e) => setTitleTask(e.target.value)}
+                  errorMessage={titleError?.message}
+                  ref={titleRef}
                 />
                 <TimeSelect
-                  value={timeTask}
-                  onChange={(e) => setTimeTask(e.target.value)}
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  errorMessage={timeError?.message}
                 />
                 <Input
                   id="description"
                   placeholder="Descreva a tarefa"
                   label="Descrição"
-                  value={descriptionTask}
-                  onChange={(e) => setDescriptionTask(e.target.value)}
+                  errorMessage={descriptionError?.message}
+                  ref={descriptionRef}
                 />
                 <div className="flex justify-between gap-3">
                   <Button

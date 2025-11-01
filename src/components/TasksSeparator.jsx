@@ -11,7 +11,7 @@ const TasksSeparator = ({ titleTasks, iconTasks }) => {
 
 TasksSeparator.propTypes = {
   titleTasks: PropTypes.string.isRequired,
-  iconTasks: PropTypes.element.isRequired,
+  iconTasks: PropTypes.node.isRequired,
 }
 
 export default TasksSeparator
