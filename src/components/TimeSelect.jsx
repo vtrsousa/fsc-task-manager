@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 import InputLabel from './InputLabel'
 
 const TimeSelect = ({ value, onChange, errorMessage }) => {
@@ -10,7 +12,7 @@ const TimeSelect = ({ value, onChange, errorMessage }) => {
         value={value}
         onChange={onChange}
       >
-        <option value="" disabled>
+        <option value="" disabled selected>
           Selecione um horário
         </option>
         <option value="morning" className="text-brand-dark-blue">
@@ -28,6 +30,12 @@ const TimeSelect = ({ value, onChange, errorMessage }) => {
       )}
     </div>
   )
+}
+
+TimeSelect.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
 }
 
 export default TimeSelect
