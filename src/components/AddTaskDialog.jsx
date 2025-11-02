@@ -29,7 +29,6 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmit }) => {
         inputName: 'title',
         message: 'O título é obrigatório.',
       })
-      return
     }
 
     if (!time.trim()) {
@@ -37,7 +36,6 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmit }) => {
         inputName: 'time',
         message: 'O horário é obrigatório.',
       })
-      return
     }
 
     if (!description.trim()) {
@@ -45,10 +43,10 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmit }) => {
         inputName: 'description',
         message: 'A descrição é obrigatória.',
       })
-      return
     }
 
     setErrors(newErrors)
+    if (newErrors.length > 0) return
 
     handleSubmit({
       id: v4(),
