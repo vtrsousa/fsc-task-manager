@@ -20,6 +20,13 @@
       "description": "Caminhada de 30 minutos no parque",
       "time": "evening",
       "status": "not_started"
+    },
+    {
+      "id": "8dfd0a8d-c13f-4d74-81d9-18a5b6c3edf4",
+      "title": "Corrida",
+      "description": "10km Domingo",
+      "time": "afternoon",
+      "status": "not_started"
     }
   ]
 }
