@@ -1,23 +1,23 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "title": "Estudar para nova prova",
-      "description": "Revisar os tópicos de matemática e física",
+      "id": "13b83edf-d409-440c-97cc-7c321f291ebf",
+      "title": "Academia",
+      "description": "Treino perna",
       "time": "morning",
-      "status": "done"
+      "status": "not_started"
     },
     {
-      "id": 2,
-      "title": "Fazer compras",
-      "description": "Comprar mantimentos para a semana",
+      "id": "f5d8bb9d-6966-48d9-81b6-8efbcb254670",
+      "title": "Trabalhar",
+      "description": "Trabalhar",
       "time": "afternoon",
-      "status": "in_progress"
+      "status": "not_started"
     },
     {
-      "id": 3,
-      "title": "Exercício físico",
-      "description": "Caminhada de 30 minutos no parque",
+      "id": "21efd582-a6ac-4d0c-98a2-275f989b35d7",
+      "title": "Jantar",
+      "description": "Jantar",
       "time": "evening",
       "status": "not_started"
     }
