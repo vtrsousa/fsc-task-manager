@@ -106,11 +106,13 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
                   label="Título"
                   errorMessage={titleError?.message}
                   ref={titleRef}
+                  disabled={submitIsLoading}
                 />
                 <TimeSelect
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                   errorMessage={timeError?.message}
+                  disabled={submitIsLoading}
                 />
                 <Input
                   id="description"
@@ -118,6 +120,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
                   label="Descrição"
                   errorMessage={descriptionError?.message}
                   ref={descriptionRef}
+                  disabled={submitIsLoading}
                 />
                 <div className="flex justify-between gap-3">
                   <Button
