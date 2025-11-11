@@ -26,7 +26,7 @@ const Tasks = () => {
 
         setTasks(data)
       } catch (error) {
-        console.error('error request api', error)
+        console.error('error res', error)
       }
     }
 
