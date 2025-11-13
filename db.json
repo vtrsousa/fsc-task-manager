@@ -15,24 +15,10 @@
       "status": "not_started"
     },
     {
-      "id": "21efd582-a6ac-4d0c-98a2-275f989b35d7",
-      "title": "Jantar",
-      "description": "Jantar",
-      "time": "evening",
-      "status": "not_started"
-    },
-    {
       "id": "866e9acd-a6a4-440e-a470-54ce29b67e9a",
       "title": "Futebol",
       "description": "Resenha",
       "time": "morning",
-      "status": "not_started"
-    },
-    {
-      "id": "081fa439-e4c6-41b5-aafd-3c89acb59303",
-      "title": "Entrevista",
-      "description": "Emprego novo",
-      "time": "afternoon",
       "status": "not_started"
     }
   ]

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import {
@@ -14,6 +14,7 @@ import Sidebar from '../components/Sidebar'
 import TimeSelect from '../components/TimeSelect'
 
 const TaskDetailsPage = () => {
+  const navigate = useNavigate()
   const { taskId } = useParams()
   const [task, setTask] = useState()
   const [errors, setErrors] = useState([])
@@ -22,6 +23,19 @@ const TaskDetailsPage = () => {
   const titleRef = useRef()
   const timeRef = useRef()
   const descriptionRef = useRef()
+
+  const handleDeleteClick = async () => {
+    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      return toast.error('Erro ao deletar tarefa, tente novamente.')
+    }
+
+    toast.error('Tarefa deletada com sucesso.')
+    navigate(-1)
+  }
 
   const handleSaveClick = async () => {
     setSaveIsLoading(true)
@@ -113,7 +127,11 @@ const TaskDetailsPage = () => {
             </div>
             <h1 className="mt-1 text-xl font-semibold">{task?.title}</h1>
           </div>
-          <Button className="h-fit self-end" color="danger">
+          <Button
+            className="h-fit self-end"
+            color="danger"
+            onClick={handleDeleteClick}
+          >
             <TrashIcon /> Deletar Tarefa
           </Button>
         </div>
