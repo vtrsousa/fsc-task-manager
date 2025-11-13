@@ -19,6 +19,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
 
   const nodeRef = useRef()
   const titleRef = useRef()
+  const timeRef = useRef()
   const descriptionRef = useRef()
 
   const handleSaveClick = async () => {
@@ -112,6 +113,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                   errorMessage={timeError?.message}
+                  ref={timeRef}
                   disabled={submitIsLoading}
                 />
                 <Input

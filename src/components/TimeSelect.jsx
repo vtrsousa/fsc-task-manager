@@ -2,19 +2,20 @@ import PropTypes from 'prop-types'
 
 import InputLabel from './InputLabel'
 
-const TimeSelect = ({ value, onChange, errorMessage }) => {
+const TimeSelect = ({ value, onChange, errorMessage, ...rest }) => {
   return (
     <div className="flex flex-col space-y-1 text-left">
       <InputLabel htmlFor="time">Horário</InputLabel>
       <select
         id="time"
-        className={`border-brand-menu-primary-light w-full rounded-lg border border-solid px-4 py-3 outline-brand-primary ${!value ? 'text-sm text-gray-400' : 'text-brand-dark-blue'}`}
+        className={`border-brand-menu-primary-light w-full rounded-lg border border-solid px-4 py-3 outline-brand-primary`}
         value={value}
         onChange={onChange}
+        {...rest}
       >
-        <option value="" disabled selected>
+        {/* <option value="" disabled selected>
           Selecione um horário
-        </option>
+        </option> */}
         <option value="morning" className="text-brand-dark-blue">
           Manhã
         </option>
