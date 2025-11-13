@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -17,12 +18,18 @@ const TaskDetailsPage = () => {
   const navigate = useNavigate()
   const { taskId } = useParams()
   const [task, setTask] = useState()
-  const [errors, setErrors] = useState([])
-  const [saveIsLoading, setSaveIsLoading] = useState(false)
-
-  const titleRef = useRef()
-  const timeRef = useRef()
-  const descriptionRef = useRef()
+  const {
+    register,
+    formState: { errors, isSubmitting: loading },
+    handleSubmit,
+    reset,
+  } = useForm({
+    defaultValues: {
+      title: task?.title,
+      time: task?.time,
+      description: task?.description,
+    },
+  })
 
   const handleDeleteClick = async () => {
     const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
@@ -37,60 +44,24 @@ const TaskDetailsPage = () => {
     navigate(-1)
   }
 
-  const handleSaveClick = async () => {
-    setSaveIsLoading(true)
-    const newErrors = []
-    const title = titleRef.current.value
-    const description = descriptionRef.current.value
-    const time = timeRef.current.value
-
-    if (!title.trim()) {
-      newErrors.push({
-        inputName: 'title',
-        message: 'O título é obrigatório.',
-      })
-    }
-    if (!time.trim()) {
-      newErrors.push({
-        inputName: 'time',
-        message: 'O horário é obrigatório.',
-      })
-    }
-    if (!description.trim()) {
-      newErrors.push({
-        inputName: 'description',
-        message: 'A descrição é obrigatória.',
-      })
-    }
-
-    setErrors(newErrors)
-    if (newErrors.length > 0) return setSaveIsLoading(false)
-
+  const handleSaveClick = async (data) => {
     const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
       method: 'PATCH',
       body: JSON.stringify({
-        title,
-        description,
-        time,
+        title: data.tile.trim(),
+        description: data.description.trim(),
+        time: data.time,
       }),
     })
 
     if (!response.ok) {
-      setSaveIsLoading(false)
       return toast.error('Erro ao salvar tarefa, tente novamente.')
     }
 
     const newTask = await response.json()
     setTask(newTask)
     toast.error('Tarefa salva com sucesso!')
-    setSaveIsLoading(false)
   }
-
-  const titleError = errors.find((error) => error.inputName === 'title')
-  const timeError = errors.find((error) => error.inputName === 'time')
-  const descriptionError = errors.find(
-    (error) => error.inputName === 'description'
-  )
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -99,13 +70,14 @@ const TaskDetailsPage = () => {
         const data = await response.json()
 
         setTask(data)
+        reset(data)
       } catch (error) {
         console.error('error res', error)
       }
     }
 
     fetchTasks()
-  }, [taskId])
+  }, [taskId, reset])
 
   return (
     <div className="flex">
@@ -136,53 +108,74 @@ const TaskDetailsPage = () => {
           </Button>
         </div>
 
-        <div className="space-y-6 rounded-xl bg-brand-white p-6">
-          <div>
-            <Input
-              id="title"
-              label="Título"
-              errorMessage={titleError?.message}
-              ref={titleRef}
-              defaultValue={task?.title}
-            />
+        <form className="space-y-6" onSubmit={handleSubmit(handleSaveClick)}>
+          <div className="space-y-6 rounded-xl bg-brand-white p-6">
+            <div>
+              <Input
+                id="title"
+                label="Título"
+                {...register('title', {
+                  required: 'O título é um campo obrigatório.',
+                  min: {
+                    value: 5,
+                    message: 'O titulo deve ter no mínimo 5 caracteres.',
+                  },
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return 'O título não pode ser vazio'
+                    }
+                    return true
+                  },
+                })}
+                errorMessage={errors?.title?.message}
+              />
+            </div>
+            <div>
+              <TimeSelect
+                {...register('time', {
+                  required: 'O horário é um campo obrigatório.',
+                })}
+                errorMessage={errors?.time?.message}
+              />
+            </div>
+            <div>
+              <Input
+                id="description"
+                label="Descrição"
+                {...register('description', {
+                  required: 'A descrição é um campo obrigatório.',
+                  min: {
+                    value: 5,
+                    message: 'A descrição deve ter no mínimo 5 caracteres.',
+                  },
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return 'A descrição não pode ser vazia'
+                    }
+                    return true
+                  },
+                })}
+                errorMessage={errors?.description?.message}
+              />
+            </div>
           </div>
-          <div>
-            <TimeSelect
-              errorMessage={timeError?.message}
-              ref={timeRef}
-              defaultValue={task?.time}
-            />
-          </div>
-          <div>
-            <Input
-              id="description"
-              label="Descrição"
-              errorMessage={descriptionError?.message}
-              ref={descriptionRef}
-              defaultValue={task?.description}
-            />
-          </div>
-        </div>
 
-        <div className="flex w-full justify-end gap-3">
-          <Button color="secondary" size="large">
-            Cancelar
-          </Button>
-          <Button
-            size="large"
-            onClick={handleSaveClick}
-            disabled={saveIsLoading}
-          >
-            {!saveIsLoading ? (
-              'Salvar'
-            ) : (
-              <>
-                <LoaderIcon className="animate-spin text-brand-white" />{' '}
-                Salvando
-              </>
-            )}
-          </Button>
-        </div>
+          <div className="flex w-full justify-end gap-3">
+            <Button color="secondary" size="large">
+              Cancelar
+            </Button>
+            <Button size="large" disabled={loading} type="submit">
+              {!loading ? (
+                'Salvar'
+              ) : (
+                <>
+                  <LoaderIcon className="animate-spin text-brand-white" />{' '}
+                  Salvando
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   )

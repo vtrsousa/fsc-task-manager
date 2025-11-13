@@ -19,7 +19,12 @@
       "title": "Futebol",
       "description": "Resenha",
       "time": "morning",
-      "status": "not_started"
+      "status": "not_started",
+      "data": {
+        "title": "Futebol",
+        "time": "morning",
+        "description": "Resenha"
+      }
     }
   ]
 }
