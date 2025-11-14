@@ -52,6 +52,11 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
     reset()
   }
 
+  const handleCancelClick = () => {
+    reset()
+    handleCloseDialog(false)
+  }
+
   return (
     <CSSTransition
       in={isOpen}
@@ -125,7 +130,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
                     size="large"
                     className="w-full"
                     type="button"
-                    onClick={() => handleCloseDialog()}
+                    onClick={handleCancelClick}
                   >
                     Cancelar
                   </Button>
