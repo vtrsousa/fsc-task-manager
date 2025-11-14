@@ -2,7 +2,7 @@
   "tasks": [
     {
       "id": "13b83edf-d409-440c-97cc-7c321f291ebf",
-      "title": "Academia Smart",
+      "title": "Academia Smart 2",
       "description": "Treino perna",
       "time": "evening",
       "status": "not_started"
@@ -13,18 +13,6 @@
       "description": "Trabalhar",
       "time": "afternoon",
       "status": "not_started"
-    },
-    {
-      "id": "866e9acd-a6a4-440e-a470-54ce29b67e9a",
-      "title": "Futebol",
-      "description": "Resenha",
-      "time": "morning",
-      "status": "not_started",
-      "data": {
-        "title": "Futebol",
-        "time": "morning",
-        "description": "Resenha"
-      }
     }
   ]
 }

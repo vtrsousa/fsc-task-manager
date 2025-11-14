@@ -23,16 +23,10 @@ const TaskDetailsPage = () => {
     formState: { errors, isSubmitting: loading },
     handleSubmit,
     reset,
-  } = useForm({
-    defaultValues: {
-      title: task?.title,
-      time: task?.time,
-      description: task?.description,
-    },
-  })
+  } = useForm()
 
   const handleDeleteClick = async () => {
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+    const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
       method: 'DELETE',
     })
 
@@ -45,10 +39,10 @@ const TaskDetailsPage = () => {
   }
 
   const handleSaveClick = async (data) => {
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+    const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
       method: 'PATCH',
       body: JSON.stringify({
-        title: data.tile.trim(),
+        title: data.title.trim(),
         description: data.description.trim(),
         time: data.time,
       }),
