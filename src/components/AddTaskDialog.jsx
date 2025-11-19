@@ -1,6 +1,5 @@
 import '../styles/AddTaskDialog.css'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import PropTypes from 'prop-types'
 import { useRef } from 'react'
 import { createPortal } from 'react-dom'
@@ -10,6 +9,7 @@ import { toast } from 'sonner'
 import { v4 } from 'uuid'
 
 import { LoaderIcon } from '../assets/icons'
+import { useAddTask } from '../hooks/data/use-add-task'
 import Button from './Button'
 import Input from './Inputs'
 import TimeSelect from './TimeSelect'
@@ -27,18 +27,8 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog }) => {
       description: '',
     },
   })
-  const queryClient = useQueryClient()
 
-  const { mutate, isPending } = useMutation({
-    mutationKey: ['addTask'],
-    mutationFn: async (task) => {
-      const response = await fetch('http://localhost:3000/tasks', {
-        method: 'POST',
-        body: JSON.stringify(task),
-      })
-      return response.json()
-    },
-  })
+  const { mutate: addTask, isPending } = useAddTask()
 
   const nodeRef = useRef()
 
@@ -51,11 +41,8 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog }) => {
       status: 'not_started',
     }
 
-    mutate(task, {
+    addTask(task, {
       onSuccess: () => {
-        queryClient.setQueryData(['tasks'], (nt) => {
-          return [...nt, task]
-        })
         toast.error('Tarefa criada com sucesso!')
         handleCloseDialog(false)
         reset()

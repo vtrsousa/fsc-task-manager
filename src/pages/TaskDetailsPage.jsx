@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -13,6 +13,8 @@ import Button from '../components/Button'
 import Input from '../components/Inputs'
 import Sidebar from '../components/Sidebar'
 import TimeSelect from '../components/TimeSelect'
+import { useDeletedTask } from '../hooks/data/use-deleted-task'
+import { useUpdatedTask } from '../hooks/data/use-updated-task'
 
 const TaskDetailsPage = () => {
   const navigate = useNavigate()
@@ -24,7 +26,6 @@ const TaskDetailsPage = () => {
     reset,
   } = useForm()
 
-  const queryClient = useQueryClient()
   const { data: task } = useQuery({
     queryKey: ['taskDetails', taskId],
     queryFn: async () => {
@@ -37,23 +38,11 @@ const TaskDetailsPage = () => {
     },
   })
 
-  const { mutate: taskDelete } = useMutation({
-    mutationKey: ['deleteTask', taskId],
-    mutationFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'DELETE',
-      })
-      if (!response.ok) throw new Error()
-      return response.json()
-    },
-  })
+  const { mutate: taskDelete } = useDeletedTask(taskId)
 
   const handleDeleteClick = async () => {
     taskDelete(undefined, {
       onSuccess: () => {
-        queryClient.setQueryData(['tasks'], (oldTasks) => {
-          return oldTasks.filter((ot) => ot.id !== taskId)
-        })
         toast.error('Tarefa deletada com sucesso!')
         navigate(-1)
       },
@@ -61,18 +50,8 @@ const TaskDetailsPage = () => {
     })
   }
 
-  const { mutate: taskUpdate, isPending: updateLoading } = useMutation({
-    mutationKey: ['updatedTask', taskId],
-    mutationFn: async (task) => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(task),
-      })
-
-      if (!response.ok) throw new Error()
-      return response.json()
-    },
-  })
+  const { mutate: taskUpdate, isPending: updateLoading } =
+    useUpdatedTask(taskId)
 
   const handleSaveClick = async (data) => {
     const task = {
@@ -81,16 +60,7 @@ const TaskDetailsPage = () => {
       time: data.time,
     }
     taskUpdate(task, {
-      onSuccess: (updatedTask) => {
-        queryClient.setQueryData(['tasks'], (oldTasks) => {
-          return oldTasks.map((ot) => {
-            if (ot.id === taskId) {
-              return updatedTask
-            }
-            return ot
-          })
-        })
-
+      onSuccess: () => {
         toast.error('Tarefa atualizada com sucesso!')
         reset()
       },
