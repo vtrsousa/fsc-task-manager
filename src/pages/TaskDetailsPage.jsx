@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -17,61 +17,86 @@ import TimeSelect from '../components/TimeSelect'
 const TaskDetailsPage = () => {
   const navigate = useNavigate()
   const { taskId } = useParams()
-  const [task, setTask] = useState()
   const {
     register,
-    formState: { errors, isSubmitting: loading },
+    formState: { errors },
     handleSubmit,
     reset,
   } = useForm()
 
+  const queryClient = useQueryClient()
+  const { data: task } = useQuery({
+    queryKey: ['taskDetails', taskId],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: 'GET',
+      })
+      const task = await response.json()
+      reset(task)
+      return task
+    },
+  })
+
+  const { mutate: taskDelete } = useMutation({
+    mutationKey: ['deleteTask', taskId],
+    mutationFn: async () => {
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) throw new Error()
+      return response.json()
+    },
+  })
+
   const handleDeleteClick = async () => {
-    const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-      method: 'DELETE',
+    taskDelete(undefined, {
+      onSuccess: () => {
+        queryClient.setQueryData(['tasks'], (oldTasks) => {
+          return oldTasks.filter((ot) => ot.id !== taskId)
+        })
+        toast.error('Tarefa deletada com sucesso!')
+        navigate(-1)
+      },
+      onError: () => toast.error('Erro ao deletar tarefa, tente novamente.'),
     })
-
-    if (!response.ok) {
-      return toast.error('Erro ao deletar tarefa, tente novamente.')
-    }
-
-    toast.error('Tarefa deletada com sucesso.')
-    navigate(-1)
   }
+
+  const { mutate: taskUpdate, isPending: updateLoading } = useMutation({
+    mutationKey: ['updatedTask', taskId],
+    mutationFn: async (task) => {
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(task),
+      })
+
+      if (!response.ok) throw new Error()
+      return response.json()
+    },
+  })
 
   const handleSaveClick = async (data) => {
-    const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        title: data.title.trim(),
-        description: data.description.trim(),
-        time: data.time,
-      }),
+    const task = {
+      title: data.title.trim(),
+      description: data.description.trim(),
+      time: data.time,
+    }
+    taskUpdate(task, {
+      onSuccess: (updatedTask) => {
+        queryClient.setQueryData(['tasks'], (oldTasks) => {
+          return oldTasks.map((ot) => {
+            if (ot.id === taskId) {
+              return updatedTask
+            }
+            return ot
+          })
+        })
+
+        toast.error('Tarefa atualizada com sucesso!')
+        reset()
+      },
+      onError: () => toast.error('Erro ao atualizar tarefa, tente novamente.'),
     })
-
-    if (!response.ok) {
-      return toast.error('Erro ao salvar tarefa, tente novamente.')
-    }
-
-    const newTask = await response.json()
-    setTask(newTask)
-    toast.error('Tarefa salva com sucesso!')
   }
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/tasks/${taskId}`)
-        const data = await response.json()
-
-        setTask(data)
-        reset(data)
-      } catch (error) {
-        console.error('error res', error)
-      }
-    }
-
-    fetchTasks()
-  }, [taskId, reset])
 
   return (
     <div className="flex">
@@ -79,7 +104,10 @@ const TaskDetailsPage = () => {
       <div className="w-full space-y-6 px-16 py-8">
         <div className="flex w-full justify-between">
           <div>
-            <button className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-brand-primary">
+            <button
+              className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-brand-primary"
+              onClick={() => navigate(-1)}
+            >
               <ArrowLeftIcon className="text-brand-white" />
             </button>
             <div className="flex items-center gap-1 text-sm">
@@ -158,8 +186,8 @@ const TaskDetailsPage = () => {
             <Button color="secondary" size="large">
               Cancelar
             </Button>
-            <Button size="large" disabled={loading} type="submit">
-              {!loading ? (
+            <Button size="large" disabled={updateLoading} type="submit">
+              {!updateLoading ? (
                 'Salvar'
               ) : (
                 <>

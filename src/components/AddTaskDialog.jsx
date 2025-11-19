@@ -1,5 +1,6 @@
 import '../styles/AddTaskDialog.css'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import PropTypes from 'prop-types'
 import { useRef } from 'react'
 import { createPortal } from 'react-dom'
@@ -13,7 +14,7 @@ import Button from './Button'
 import Input from './Inputs'
 import TimeSelect from './TimeSelect'
 
-const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
+const AddTaskDialog = ({ isOpen, handleCloseDialog }) => {
   const {
     register,
     formState: { errors, isSubmitting: loading },
@@ -24,6 +25,18 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
       title: '',
       time: '',
       description: '',
+    },
+  })
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['addTask'],
+    mutationFn: async (task) => {
+      const response = await fetch('http://localhost:3000/tasks', {
+        method: 'POST',
+        body: JSON.stringify(task),
+      })
+      return response.json()
     },
   })
 
@@ -38,18 +51,17 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
       status: 'not_started',
     }
 
-    const response = await fetch('http://localhost:3000/tasks', {
-      method: 'POST',
-      body: JSON.stringify(task),
+    mutate(task, {
+      onSuccess: () => {
+        queryClient.setQueryData(['tasks'], (nt) => {
+          return [...nt, task]
+        })
+        toast.error('Tarefa criada com sucesso!')
+        handleCloseDialog(false)
+        reset()
+      },
+      onError: () => toast.error('Erro ao criar tarefa, tente novamente.'),
     })
-
-    if (!response.ok) {
-      return toast.error('Erro ao adicionar tarefa, tente novamente.')
-    }
-
-    handleCloseDialog(false)
-    onSubmitSucess(task)
-    reset()
   }
 
   const handleCancelClick = () => {
@@ -138,9 +150,9 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, onSubmitSucess }) => {
                     size="large"
                     className="w-full"
                     type="submit"
-                    disabled={loading}
+                    disabled={isPending}
                   >
-                    {!loading ? (
+                    {!isPending ? (
                       'Salvar'
                     ) : (
                       <>

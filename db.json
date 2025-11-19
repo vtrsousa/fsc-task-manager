@@ -1,17 +1,10 @@
 {
   "tasks": [
     {
-      "id": "13b83edf-d409-440c-97cc-7c321f291ebf",
-      "title": "Academia Smart 2",
-      "description": "Treino perna",
-      "time": "evening",
-      "status": "not_started"
-    },
-    {
-      "id": "f5d8bb9d-6966-48d9-81b6-8efbcb254670",
-      "title": "Trabalhar",
-      "description": "Trabalhar",
-      "time": "afternoon",
+      "id": "9475753e-07c8-4a32-bb1e-2cf5095f4991",
+      "title": "erereyyy",
+      "description": "rererer",
+      "time": "morning",
       "status": "not_started"
     }
   ]
