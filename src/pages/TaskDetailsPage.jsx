@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -14,6 +13,7 @@ import Input from '../components/Inputs'
 import Sidebar from '../components/Sidebar'
 import TimeSelect from '../components/TimeSelect'
 import { useDeletedTask } from '../hooks/data/use-deleted-task'
+import { useGetTask } from '../hooks/data/use-get-task'
 import { useUpdatedTask } from '../hooks/data/use-updated-task'
 
 const TaskDetailsPage = () => {
@@ -26,19 +26,12 @@ const TaskDetailsPage = () => {
     reset,
   } = useForm()
 
-  const { data: task } = useQuery({
-    queryKey: ['taskDetails', taskId],
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: 'GET',
-      })
-      const task = await response.json()
-      reset(task)
-      return task
-    },
-  })
-
+  const { data: task } = useGetTask(taskId)
   const { mutate: taskDelete } = useDeletedTask(taskId)
+  const { mutate: taskUpdate, isPending: updateLoading } = useUpdatedTask({
+    taskId,
+    onSuccess: (task) => reset(task),
+  })
 
   const handleDeleteClick = async () => {
     taskDelete(undefined, {
@@ -50,16 +43,13 @@ const TaskDetailsPage = () => {
     })
   }
 
-  const { mutate: taskUpdate, isPending: updateLoading } =
-    useUpdatedTask(taskId)
-
   const handleSaveClick = async (data) => {
-    const task = {
+    const newTask = {
       title: data.title.trim(),
       description: data.description.trim(),
       time: data.time,
     }
-    taskUpdate(task, {
+    taskUpdate(newTask, {
       onSuccess: () => {
         toast.error('Tarefa atualizada com sucesso!')
         reset()

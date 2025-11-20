@@ -5,10 +5,10 @@ export const useUpdatedTask = (taskId) => {
 
   return useMutation({
     mutationKey: ['updatedTask', taskId],
-    mutationFn: async (task) => {
+    mutationFn: async (newTask) => {
       const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
         method: 'PATCH',
-        body: JSON.stringify(task),
+        body: JSON.stringify(newTask),
       })
 
       if (!response.ok) throw new Error()
