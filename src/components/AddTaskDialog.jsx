@@ -122,6 +122,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog }) => {
                       return true
                     },
                   })}
+                  errorMessage={errors?.description?.message}
                 />
                 <div className="flex justify-between gap-3">
                   <Button

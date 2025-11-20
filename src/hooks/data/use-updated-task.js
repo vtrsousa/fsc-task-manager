@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-export const useUpdatedTask = (taskId) => {
+export const useUpdatedTask = ({ taskId, onSuccess }) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -13,8 +13,11 @@ export const useUpdatedTask = (taskId) => {
 
       if (!response.ok) throw new Error()
       const updatedTask = await response.json()
+      // reset
+      onSuccess(updatedTask)
       return updatedTask
     },
+    // cache
     onSuccess: (updatedTask) => {
       queryClient.setQueryData(['tasks'], (oldTasks) => {
         return oldTasks.map((ot) => {

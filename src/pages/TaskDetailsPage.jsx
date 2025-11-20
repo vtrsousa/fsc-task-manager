@@ -26,12 +26,15 @@ const TaskDetailsPage = () => {
     reset,
   } = useForm()
 
-  const { data: task } = useGetTask(taskId)
-  const { mutate: taskDelete } = useDeletedTask(taskId)
+  const { data: task } = useGetTask({
+    taskId,
+    onSuccess: reset,
+  })
   const { mutate: taskUpdate, isPending: updateLoading } = useUpdatedTask({
     taskId,
-    onSuccess: (task) => reset(task),
+    onSuccess: reset,
   })
+  const { mutate: taskDelete } = useDeletedTask(taskId)
 
   const handleDeleteClick = async () => {
     taskDelete(undefined, {
@@ -52,7 +55,6 @@ const TaskDetailsPage = () => {
     taskUpdate(newTask, {
       onSuccess: () => {
         toast.error('Tarefa atualizada com sucesso!')
-        reset()
       },
       onError: () => toast.error('Erro ao atualizar tarefa, tente novamente.'),
     })
