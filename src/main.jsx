@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Toaster } from 'sonner'
 
-import App from './App.jsx'
+import HomePage from './pages/HomePage.jsx'
 import TaskDetailsPage from './pages/TaskDetailsPage.jsx'
 
 const queryClient = new QueryClient()
@@ -14,7 +14,11 @@ const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <HomePage />,
+  },
+  {
+    path: '/tasks',
+    element: <TaskDetailsPage />,
   },
   {
     path: '/task/:taskId',
