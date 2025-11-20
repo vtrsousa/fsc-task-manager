@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
+
+import { api } from '../lib/axios'
 
 export const useDeletedTask = (taskId) => {
   const queryClient = useQueryClient()
@@ -7,9 +8,7 @@ export const useDeletedTask = (taskId) => {
   return useMutation({
     mutationKey: ['deletedTask', taskId],
     mutationFn: async () => {
-      const { data: deletedTask } = await axios.delete(
-        `http://localhost:3000/tasks/${taskId}`
-      )
+      const { data: deletedTask } = await api.delete(`/tasks/${taskId}`)
       return deletedTask
     },
     onSuccess: (deletedTask) => {

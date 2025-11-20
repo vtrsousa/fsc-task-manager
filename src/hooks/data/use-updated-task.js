@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
+
+import { api } from '../lib/axios'
 
 export const useUpdatedTask = ({ taskId, onSuccess }) => {
   const queryClient = useQueryClient()
@@ -7,10 +8,7 @@ export const useUpdatedTask = ({ taskId, onSuccess }) => {
   return useMutation({
     mutationKey: ['updatedTask', taskId],
     mutationFn: async (newTask) => {
-      const { data: updatedTask } = await axios.patch(
-        `http://localhost:3000/tasks/${taskId}`,
-        newTask
-      )
+      const { data: updatedTask } = await api.patch(`/tasks/${taskId}`, newTask)
       onSuccess(updatedTask)
       return updatedTask
     },
