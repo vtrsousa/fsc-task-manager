@@ -65,7 +65,7 @@ const TaskItem = ({ task, handleCheckboxClick }) => {
             <LoaderIcon className="animate-spin text-brand-text-gray" />
           )}
         </Button>
-        <Link to={`task/${task.id}`} className="transition hover:opacity-75">
+        <Link to={`/task/${task.id}`} className="transition hover:opacity-75">
           <DetailsIcon />
         </Link>
       </div>
