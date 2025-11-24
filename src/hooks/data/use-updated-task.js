@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { taskQueries } from '../../keys/queries'
 import { api } from '../lib/axios'
 
 export const useUpdatedTask = ({ taskId, onSuccess }) => {
@@ -14,7 +15,7 @@ export const useUpdatedTask = ({ taskId, onSuccess }) => {
     },
     // cache
     onSuccess: (updatedTask) => {
-      queryClient.setQueryData(['tasks'], (oldTasks) => {
+      queryClient.setQueryData(taskQueries.getAll(), (oldTasks) => {
         return oldTasks.map((ot) => {
           if (ot.id === taskId) {
             return updatedTask

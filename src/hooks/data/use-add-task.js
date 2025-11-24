@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { taskQueries } from '../../keys/queries'
 import { api } from '../lib/axios'
 
 export const useAddTask = () => {
@@ -13,7 +14,7 @@ export const useAddTask = () => {
     },
     // Deixar aqui tudo o que responsavel pelo cache, req etc
     onSuccess: (createdTask) => {
-      queryClient.setQueryData(['tasks'], (oldTasks) => {
+      queryClient.setQueryData(taskQueries.getAll(), (oldTasks) => {
         return [...oldTasks, createdTask]
       })
     },
