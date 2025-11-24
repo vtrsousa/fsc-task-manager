@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 import { v4 } from 'uuid'
 
 import { LoaderIcon } from '../assets/icons'
-import { useAddTask } from '../hooks/data/use-add-task'
+import { useAddedTask } from '../hooks/data/use-add-task'
 import Button from './Button'
 import Input from './Inputs'
 import TimeSelect from './TimeSelect'
@@ -28,7 +28,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog }) => {
     },
   })
 
-  const { mutate: addTask, isPending } = useAddTask()
+  const { mutate: addTask, isPending } = useAddedTask()
 
   const nodeRef = useRef()
 

@@ -1,21 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { taskMutationKeys } from '../../keys/mutations'
 import { taskQueries } from '../../keys/queries'
 import { api } from '../lib/axios'
 
-export const useAddTask = () => {
+export const useAddedTask = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ['addTask'],
+    mutationKey: taskMutationKeys.added(),
     mutationFn: async (task) => {
-      const { data: createdTask } = await api.post('/tasks', task)
-      return createdTask
+      const { data: addedTask } = await api.post('/tasks', task)
+      return addedTask
     },
     // Deixar aqui tudo o que responsavel pelo cache, req etc
-    onSuccess: (createdTask) => {
+    onSuccess: (addedTask) => {
       queryClient.setQueryData(taskQueries.getAll(), (oldTasks) => {
-        return [...oldTasks, createdTask]
+        return [...oldTasks, addedTask]
       })
     },
   })
