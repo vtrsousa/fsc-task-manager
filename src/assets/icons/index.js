@@ -4,7 +4,9 @@ import CheckIcon from './check.svg?react'
 import ChevronRightIcon from './chevron-right.svg?react'
 import ClounSunIcon from './cloud-sun.svg?react'
 import DetailsIcon from './details.svg?react'
+import GlassWaterIcon from './glass-water.svg?react'
 import HomeIcon from './home.svg?react'
+import LayoutListIcon from './layout-list.svg?react'
 import LoaderIcon from './loader.svg?react'
 import MoonIcon from './moon.svg?react'
 import SunIcon from './sun.svg?react'
@@ -18,7 +20,9 @@ export {
   ChevronRightIcon,
   ClounSunIcon,
   DetailsIcon,
+  GlassWaterIcon,
   HomeIcon,
+  LayoutListIcon,
   LoaderIcon,
   MoonIcon,
   SunIcon,

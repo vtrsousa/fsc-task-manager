@@ -1,25 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 import { toast } from 'sonner'
 
-import {
-  AddIcon,
-  ClounSunIcon,
-  MoonIcon,
-  SunIcon,
-  TrashIcon,
-} from '../assets/icons'
+import { ClounSunIcon, MoonIcon, SunIcon } from '../assets/icons'
 import { useGetTasks } from '../hooks/data/use-get-tasks'
-import AddTaskDialog from './AddTaskDialog'
-import Button from './Button'
+import { taskQueries } from '../keys/queries'
+import Header from './Header'
 import TaskItem from './TaskItem'
 import TasksSeparator from './TasksSeparator'
 
 const Tasks = () => {
   const queryClient = useQueryClient()
   const { data: tasks } = useGetTasks()
-
-  const [addTasksDialogIsOpen, setAddTasksDialogIsOpen] = useState(false)
 
   const morningTasks = tasks?.filter((task) => task.time === 'morning')
   const afternoonTasks = tasks?.filter((task) => task.time === 'afternoon')
@@ -37,35 +28,13 @@ const Tasks = () => {
         ? { ...t, status: newStatusTask[t.status] || t.status }
         : t
     )
-    queryClient.setQueryData(['tasks'], newTasks)
+    queryClient.setQueryData(taskQueries.getAll(), newTasks)
     toast.success('Tarefa atualizada com sucesso!')
   }
 
   return (
     <div className="w-full space-y-6 px-16 py-8">
-      <div className="flex w-full items-center justify-between">
-        <div>
-          <span className="text-xs font-semibold text-brand-primary">
-            Minhas tarefas
-          </span>
-          <h2 className="text-xl font-semibold">Minhas tarefas</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button color="ghost">
-            Limpar tarefas
-            <TrashIcon />
-          </Button>
-          <Button onClick={() => setAddTasksDialogIsOpen(true)}>
-            Adicionar tarefa
-            <AddIcon />
-          </Button>
-        </div>
-      </div>
-
-      <AddTaskDialog
-        isOpen={addTasksDialogIsOpen}
-        handleCloseDialog={() => setAddTasksDialogIsOpen(false)}
-      />
+      <Header title="Minhas tarefas" subtitle="Minhas Tarefas" />
 
       <div className="gap-6 space-y-6 rounded-xl bg-white p-6">
         <div className="space-y-3">
