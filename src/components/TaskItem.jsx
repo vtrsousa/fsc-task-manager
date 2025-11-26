@@ -1,20 +1,48 @@
 import { useQueryClient } from '@tanstack/react-query'
 import PropTypes from 'prop-types'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import { CheckIcon, DetailsIcon, LoaderIcon, TrashIcon } from '../assets/icons'
 import { useDeletedTask } from '../hooks/data/use-deleted-task'
+import { useUpdatedTask } from '../hooks/data/use-updated-task'
+import { taskQueries } from '../keys/queries'
 import Button from './Button'
 
-const TaskItem = ({ task, handleCheckboxClick }) => {
+const TaskItem = ({ task }) => {
+  const { reset } = useForm()
   const queryClient = useQueryClient()
   const { mutate: deletedTask, isPending } = useDeletedTask(task.id)
+  const { mutate: updatedTask } = useUpdatedTask({
+    taskId: task?.id,
+    onSuccess: reset,
+  })
+
+  const handleCheckboxClick = () => {
+    const newStatusTask = {
+      not_started: 'in_progress',
+      in_progress: 'done',
+      done: 'not_started',
+    }
+
+    updatedTask(
+      {
+        ...task,
+        status: newStatusTask[task.status] || task.status,
+      },
+      {
+        onSuccess: () => toast.success('Tarefa atualizada com sucesso!'),
+        onError: () =>
+          toast.success('Erro ao atualizar tarefa, tente novamente.'),
+      }
+    )
+  }
 
   const handleDeleteClick = async () => {
     deletedTask(undefined, {
       onSuccess: () => {
-        queryClient.setQueryData(['tasks'], (oldTasks) => {
+        queryClient.setQueryData(taskQueries.getAll(), (oldTasks) => {
           return oldTasks.filter((ot) => ot.id !== task.id)
         })
         toast.error('Tarefa deletada com sucesso!')
@@ -42,7 +70,7 @@ const TaskItem = ({ task, handleCheckboxClick }) => {
             type="checkbox"
             checked={task.status === 'done'}
             className="absolute h-full w-full cursor-pointer opacity-0"
-            onChange={() => handleCheckboxClick(task.id)}
+            onChange={handleCheckboxClick}
           />
           {task.status === 'done' && <CheckIcon />}
           {task.status === 'in_progress' && (

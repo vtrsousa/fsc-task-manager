@@ -1,18 +1,11 @@
 {
   "tasks": [
     {
-      "id": "c927eb40-c131-4f5d-a254-3e0347209d0c",
-      "title": "teste",
-      "description": "teste",
-      "time": "afternoon",
-      "status": "not_started"
-    },
-    {
-      "id": "6d9cf9e2-f0fd-4f73-aa68-0e51b97aafae",
-      "title": "tete",
+      "id": "ac3b0eda-0906-44c5-82a5-57f8ec51055f",
+      "title": "tete23",
       "description": "tete",
       "time": "morning",
-      "status": "not_started"
+      "status": "in_progress"
     }
   ]
 }

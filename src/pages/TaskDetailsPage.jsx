@@ -47,12 +47,7 @@ const TaskDetailsPage = () => {
   }
 
   const handleSaveClick = async (data) => {
-    const newTask = {
-      title: data.title.trim(),
-      description: data.description.trim(),
-      time: data.time,
-    }
-    taskUpdate(newTask, {
+    taskUpdate(data, {
       onSuccess: () => {
         toast.error('Tarefa atualizada com sucesso!')
       },
