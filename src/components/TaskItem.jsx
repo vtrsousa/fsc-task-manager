@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
+import { tv } from 'tailwind-variants'
 
 import { CheckIcon, DetailsIcon, LoaderIcon, TrashIcon } from '../assets/icons'
 import { useDeletedTask } from '../hooks/data/use-deleted-task'
@@ -10,7 +11,7 @@ import { useUpdatedTask } from '../hooks/data/use-updated-task'
 import { taskQueries } from '../keys/queries'
 import Button from './Button'
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, color }) => {
   const { reset } = useForm()
   const queryClient = useQueryClient()
   const { mutate: deletedTask, isPending } = useDeletedTask(task.id)
@@ -51,20 +52,25 @@ const TaskItem = ({ task }) => {
     })
   }
 
-  const getStatusClasses = () => {
-    if (task.status === 'done') return 'bg-brand-primary text-brand-primary'
-    if (task.status === 'in_progress')
-      return 'bg-brand-process text-brand-process'
-    if (task.status === 'not_started')
-      return 'bg-brand-dark-blue bg-opacity-10 text-brand-dark-blue'
-  }
+  const taskItem = tv({
+    base: 'flex items-center justify-between gap-2 rounded-lg px-4 py-3 text-sm transition',
+    variants: {
+      color: {
+        not_started: 'bg-brand-dark-blue/10 text-brand-dark-blue',
+        in_progress: 'bg-brand-process/10 text-brand-process',
+        done: 'bg-brand-primary/10 text-brand-primary',
+      },
+    },
+    defaultVariants: {
+      color: 'not_started',
+    },
+  })
+
   return (
-    <div
-      className={`${getStatusClasses()} flex items-center justify-between gap-2 rounded-lg bg-opacity-10 px-4 py-3 text-sm transition`}
-    >
+    <div className={taskItem({ color, intent: 'primary' })}>
       <div className="flex items-center gap-2">
         <label
-          className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg ${getStatusClasses()}`}
+          className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg bg-brand-dark-blue/5`}
         >
           <input
             type="checkbox"
