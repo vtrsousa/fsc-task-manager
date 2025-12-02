@@ -107,6 +107,7 @@ Distribuído sob a licença MIT. Consulte o arquivo LICENSE (caso aplicação p�
 **Autor:** João Vitor de Sousa – Projeto desenvolvido durante Full Stack Club.
 react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-<!--
-Prompt Futuro:
-Escreva um README.md simples para esse projeto contendo informações técnicas de bibliotecas utilizadas, padrões de projeto e instruções de setup e configuração do projeto conforme as bibliotecas utilizadas. Mantenha o README simples contendo apenas as informações mais importantes. Lembre de mencionar que o nome desse projeto é Full Stack Club e foi desenvolvido durante o curso de React. -->
+## 🎯 Deploy
+
+**Vercel** deploy realizado usando a ferramenta versão.
+[`Acessar aplicação`](https://fsc-task-manager-kappa.vercel.app/)
